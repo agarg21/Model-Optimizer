@@ -16,8 +16,6 @@ on:
       - "tools/resource_monitor.py"
       - ".agents/skills/**"
       - "plugins/modelopt/skills/**"
-  schedule:
-    - cron: "0 0 * * *" # Nightly
   workflow_dispatch:
     # On-demand
 
@@ -77,6 +75,7 @@ jobs:
           OMP_NUM_THREADS: "1"
         run: pip install nox uv && nox -s "unit-3.12(torch_214, tf_latest)" -- $PYTEST_EXTRA
       - name: Upload coverage reports to Codecov
+        continue-on-error: true # fork-only measurement harness (no CODECOV_TOKEN)
         uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
